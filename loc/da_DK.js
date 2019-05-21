@@ -222,10 +222,11 @@ module.exports = {
     withdraw: 'Træk coins tilbage',
   },
   pleasebackup: {
-    title: 'Your wallet is created...',
+    title: 'Backup',
+    success: 'Success, your wallet is now created!',
     text:
-      "Please take a moment to write down this mnemonic phrase on a piece of paper. It's your backup you can use to restore the wallet on other device. You can use Electrum wallet on desktop (https://electrum.org/) to restore the same wallet.",
-    ok: 'OK, I wrote this down!',
+      "Please take a moment to write down this mnemonic sentence on paper. It’s your backup that you can use to restore your wallet.",
+    
   },
   lndViewInvoice: {
     wasnt_paid_and_expired: 'This invoice was not paid for and has expired',
