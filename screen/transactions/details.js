@@ -44,13 +44,13 @@ export default class TransactionsDetails extends Component {
     let to = [];
     for (let tx of BlueApp.getTransactions()) {
       if (tx.hash === hash) {
-        console.log(tx);
         foundTx = tx;
         for (let input of foundTx.inputs) {
           from = from.concat(input.addresses);
         }
         for (let output of foundTx.outputs) {
-          to = to.concat(output.addresses);
+          if (output.addresses) to = to.concat(output.addresses);
+          if (output.scriptPubKey.addresses) to = to.concat(output.scriptPubKey.addresses);
         }
       }
     }
@@ -159,7 +159,7 @@ export default class TransactionsDetails extends Component {
                 <BlueText style={{ marginBottom: 8, color: 'grey' }}>{this.state.tx.hash}</BlueText>
                 <TouchableOpacity
                   onPress={() => {
-                    const url = `https://live.blockcypher.com/btc/tx/${this.state.tx.hash}`;
+                    const url = `https://blockstream.info/tx/${this.state.tx.hash}`;
                     Linking.canOpenURL(url).then(supported => {
                       if (supported) {
                         Linking.openURL(url);

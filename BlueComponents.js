@@ -147,12 +147,11 @@ export class LightningButton extends Component {
           <View style={{ marginTop: 16, marginLeft: 16, marginBottom: 16 }}>
             <Text style={{ color: BlueApp.settings.lnborderColor, fontWeight: 'bold' }}>{loc.wallets.add.lightning}</Text>
           </View>
-              <Image
-                style={{ width: 34, height: 34, marginRight: 8, marginBottom: 8, justifyContent: 'flex-end', alignSelf: 'flex-end' }}
-                source={require('./img/addWallet/lightning.png')}
-              />
+          <Image
+            style={{ width: 34, height: 34, marginRight: 8, marginBottom: 8, justifyContent: 'flex-end', alignSelf: 'flex-end' }}
+            source={require('./img/addWallet/lightning.png')}
+          />
         </View>
-
       </TouchableOpacity>
     );
   }
@@ -539,6 +538,12 @@ export class is {
 export class BlueSpacing20 extends Component {
   render() {
     return <View {...this.props} style={{ height: 20, opacity: 0 }} />;
+  }
+}
+
+export class BlueSpacing10 extends Component {
+  render() {
+    return <View {...this.props} style={{ height: 10, opacity: 0 }} />;
   }
 }
 
