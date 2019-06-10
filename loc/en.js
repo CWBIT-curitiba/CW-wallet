@@ -228,7 +228,6 @@ module.exports = {
     success: 'Success, your wallet is now created!',
     text:
       "Please take a moment to write down this mnemonic phrase on paper. It’s your backup that you can use to restore your wallet.",
-    
   },
   lndViewInvoice: {
     wasnt_paid_and_expired: 'This invoice was not paid for and has expired',

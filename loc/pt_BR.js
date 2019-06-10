@@ -230,9 +230,9 @@ module.exports = {
   },
   pleasebackup: {
     title: 'Backup',
-    success: 'A sua carteira foi criada com sucesso!',
+    success: 'Sua carteira foi criada com sucesso!',
     text:
-      'Por favor anote num pedaço de papel essa seqüência de palavras, elas serão o seu backup e você as pode usar para' +
+      'Por favor anote num pedaço de papel essa sequência de palavras, elas serão o seu backup e você as pode usar para' +
       ' recuperar a sua carteira em outros dispositivos. Por exemplo, você pode usar o programa Electrum para desktops' +
       ' (https://electrum.org/) para acessar esta mesma carteira.',
   },
