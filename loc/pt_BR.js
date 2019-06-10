@@ -25,8 +25,8 @@ module.exports = {
       empty_txs1: 'Suas transações aparecerão aqui,',
       empty_txs2: 'nenhuma no momento',
       empty_txs1_lightning:
-        "A carteira Lightning faz transações super rápidas (coisa de segundos) e tem taxas ridiculamente baratas," +
-        " ideal para transações diárias e de baixo valor.",
+        'A carteira Lightning faz transações super rápidas (coisa de segundos) e tem taxas ridiculamente baratas,' +
+        ' ideal para transações diárias e de baixo valor.',
       empty_txs2_lightning: '\nPara começar a usar clique em "administrar fundos" e recarregue o seu saldo.',
       tap_here_to_buy: 'Toque aqui para comprar Bitcoin',
     },
@@ -189,7 +189,7 @@ module.exports = {
     lightning_settings: 'Preferências Lightning',
     lightning_settings_explain:
       'Para se conectar ao seu próprio ponto LND, você precisa instalar a aplicação LndHub' +
-      ' e copiar sua URL para cá. Deixe em branco para usar a LndHub padrão fornecida pela BlueWallet (lndhub.io).' + 
+      ' e copiar sua URL para cá. Deixe em branco para usar a LndHub padrão fornecida pela BlueWallet (lndhub.io).' +
       ' Carteiras criadas após mudanças nestas preferências ficarão ligadas à instância LndHub que estiver especificada.',
     save: 'Salvar',
     about: 'Sobre',
@@ -230,9 +230,11 @@ module.exports = {
   },
   pleasebackup: {
     title: 'Backup',
-    success: 'Success, your wallet is now created!',
+    success: 'A sua carteira foi criada com sucesso!',
     text:
-      "Por favor anote num pedaço de papel essa sequência de palavras, elas serão o seu backup e você as pode usar para recuperar a sua carteira se necessário",
+      'Por favor anote num pedaço de papel essa seqüência de palavras, elas serão o seu backup e você as pode usar para' +
+      ' recuperar a sua carteira em outros dispositivos. Por exemplo, você pode usar o programa Electrum para desktops' +
+      ' (https://electrum.org/) para acessar esta mesma carteira.',
   },
   lndViewInvoice: {
     wasnt_paid_and_expired: 'This invoice was not paid for and has expired',

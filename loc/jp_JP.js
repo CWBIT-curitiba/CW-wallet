@@ -228,7 +228,7 @@ module.exports = {
     title: 'Backup',
     success: 'Success, your wallet is now created!',
     text:
-      "Please take a moment to write down this mnemonic sentence on paper. It’s your backup that you can use to restore your wallet.",
+      'すべてのニモニックを別紙に書きとめてください。他のデバイスへウォレットをリストアする際にニモニックが必要になります。デスクトップ用ウォレットの Electrum wallet (https://electrum.org/) へニモニックを使用してウォレットをリストアすることが可能です。',
   },
   lndViewInvoice: {
     wasnt_paid_and_expired: 'この請求書は支払いが行われなかったため無効になりました',
