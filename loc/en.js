@@ -227,7 +227,7 @@ module.exports = {
     title: 'Backup',
     success: 'Success, your wallet is now created!',
     text:
-      "Please take a moment to write down this mnemonic sentence on paper. It’s your backup that you can use to restore your wallet.",
+      "Please take a moment to write down this mnemonic phrase on paper. It’s your backup that you can use to restore your wallet.",
     
   },
   lndViewInvoice: {
