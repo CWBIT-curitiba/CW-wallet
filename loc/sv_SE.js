@@ -165,6 +165,7 @@ module.exports = {
       create: 'Skapa',
       setAmount: 'Ta emot med belopp',
     },
+    scan_lnurl: 'Scan to receive'
   },
   buyBitcoin: {
     header: 'Köp bitcoin',
@@ -185,6 +186,8 @@ module.exports = {
     lightning_settings_explain:
       'För att ansluta till din egen LND-nod, installera LndHub' +
       " och mata in dess URL nedan. Lämna blankt för att använda BlueWallet's LNDHub (lndhub.io). Plånböcker skapade efter att inställningarna sparats kommer att använda den angivna LNDHub:en",
+    electrum_settings: 'Electrum Settings',
+    electrum_settings_explain: 'Set to blank to use default',
     save: 'Spara',
     about: 'Om',
     language: 'Språk',
@@ -226,8 +229,7 @@ module.exports = {
   pleasebackup: {
     title: 'Backup',
     success: 'Din plånbok har skapats...',
-    text:
-       "Innan du går vidare, var snäll och skriv ned dessa ord på ett papper och förvara på ett säkert ställe. De är din backup och säkerställer att du kan återställa din plånbok igen om något händer. Den går att återställa även i andra plånböcker såsom t.ex. Electrum (https://electrum.org/).",
+    text: 'Innan du går vidare, var snäll och skriv ned dessa ord på ett papper och förvara på ett säkert ställe. De är din backup och säkerställer att du kan återställa din plånbok igen om något händer. Den går att återställa även i andra plånböcker såsom t.ex. Electrum (https://electrum.org/).',
   },
   lndViewInvoice: {
     wasnt_paid_and_expired: 'Denna faktura har ej betalats och är nu utgången',

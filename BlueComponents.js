@@ -29,6 +29,9 @@ import { BitcoinUnit } from './models/bitcoinUnits';
 import NavigationService from './NavigationService';
 import ImagePicker from 'react-native-image-picker';
 import WalletGradient from './class/walletGradient';
+import ToolTip from 'react-native-tooltip';
+import { BlurView } from '@react-native-community/blur';
+import showPopupMenu from 'react-native-popup-menu-android';
 const LocalQRCode = require('@remobile/react-native-qrcode-local-image');
 let loc = require('./loc/');
 /** @type {AppStorage} */
@@ -157,6 +160,180 @@ export class LightningButton extends Component {
   }
 }
 
+export class BlueWalletNavigationHeader extends Component {
+  static propTypes = {
+    wallet: PropTypes.shape().isRequired,
+    onWalletUnitChange: PropTypes.func,
+  };
+
+  static getDerivedStateFromProps(props, _state) {
+    return { wallet: props.wallet, onWalletUnitChange: props.onWalletUnitChange };
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { wallet: props.wallet, walletPreviousPreferredUnit: props.wallet.getPreferredBalanceUnit() };
+  }
+
+  handleCopyPress = _item => {
+    Clipboard.setString(loc.formatBalance(this.state.wallet.getBalance(), this.state.wallet.getPreferredBalanceUnit()).toString());
+  };
+
+  handleBalanceVisibility = async _item => {
+    const wallet = this.state.wallet;
+    wallet.hideBalance = !wallet.hideBalance;
+    this.setState({ wallet });
+    await BlueApp.saveToDisk();
+  };
+
+  showAndroidTooltip = () => {
+    showPopupMenu(this.toolTipMenuOptions(), this.handleToolTipSelection, this.walletBalanceText);
+  };
+
+  handleToolTipSelection = item => {
+    if (item === loc.transactions.details.copy || item.id === loc.transactions.details.copy) {
+      this.handleCopyPress();
+    } else if (item === 'balancePrivacy' || item.id === 'balancePrivacy') {
+      this.handleBalanceVisibility();
+    }
+  };
+
+  toolTipMenuOptions() {
+    return Platform.select({
+      // NOT WORKING ATM.
+      // ios: [
+      //   { text: this.state.wallet.hideBalance ? 'Show Balance' : 'Hide Balance', onPress: this.handleBalanceVisibility },
+      //   { text: loc.transactions.details.copy, onPress: this.handleCopyPress },
+      // ],
+      android: this.state.wallet.hideBalance
+        ? [{ id: 'balancePrivacy', label: this.state.wallet.hideBalance ? 'Show Balance' : 'Hide Balance' }]
+        : [
+            { id: 'balancePrivacy', label: this.state.wallet.hideBalance ? 'Show Balance' : 'Hide Balance' },
+            { id: loc.transactions.details.copy, label: loc.transactions.details.copy },
+          ],
+    });
+  }
+
+  changeWalletBalanceUnit() {
+    let walletPreviousPreferredUnit = this.state.wallet.getPreferredBalanceUnit();
+    const wallet = this.state.wallet;
+    if (walletPreviousPreferredUnit === BitcoinUnit.BTC) {
+      wallet.preferredBalanceUnit = BitcoinUnit.SATS;
+      walletPreviousPreferredUnit = BitcoinUnit.BTC;
+    } else if (walletPreviousPreferredUnit === BitcoinUnit.SATS) {
+      wallet.preferredBalanceUnit = BitcoinUnit.LOCAL_CURRENCY;
+      walletPreviousPreferredUnit = BitcoinUnit.SATS;
+    } else if (walletPreviousPreferredUnit === BitcoinUnit.LOCAL_CURRENCY) {
+      wallet.preferredBalanceUnit = BitcoinUnit.BTC;
+      walletPreviousPreferredUnit = BitcoinUnit.BTC;
+    } else {
+      wallet.preferredBalanceUnit = BitcoinUnit.BTC;
+      walletPreviousPreferredUnit = BitcoinUnit.BTC;
+    }
+
+    this.setState({ wallet, walletPreviousPreferredUnit: walletPreviousPreferredUnit }, () => {
+      this.props.onWalletUnitChange(wallet);
+    });
+  }
+
+  render() {
+    return (
+      <LinearGradient
+        colors={WalletGradient.gradientsFor(this.state.wallet.type)}
+        style={{ padding: 15, minHeight: 140, justifyContent: 'center' }}
+      >
+        <Image
+          source={
+            (LightningCustodianWallet.type === this.state.wallet.type && require('./img/lnd-shape.png')) || require('./img/btc-shape.png')
+          }
+          style={{
+            width: 99,
+            height: 94,
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+          }}
+        />
+
+        <Text
+          numberOfLines={1}
+          style={{
+            backgroundColor: 'transparent',
+            fontSize: 19,
+            color: '#fff',
+          }}
+        >
+          {this.state.wallet.getLabel()}
+        </Text>
+        {Platform.OS === 'ios' && (
+          <ToolTip
+            ref={tooltip => (this.tooltip = tooltip)}
+            actions={
+              this.state.wallet.hideBalance
+                ? [{ text: this.state.wallet.hideBalance ? 'Show Balance' : 'Hide Balance', onPress: this.handleBalanceVisibility }]
+                : [
+                    { text: this.state.wallet.hideBalance ? 'Show Balance' : 'Hide Balance', onPress: this.handleBalanceVisibility },
+                    { text: loc.transactions.details.copy, onPress: this.handleCopyPress },
+                  ]
+            }
+          />
+        )}
+        <TouchableOpacity
+          style={styles.balance}
+          onPress={() => this.changeWalletBalanceUnit()}
+          ref={ref => (this.walletBalanceText = ref)}
+          onLongPress={() => (Platform.OS === 'ios' ? this.tooltip.showMenu() : this.showAndroidTooltip())}
+        >
+          {this.state.wallet.hideBalance ? (
+            <BluePrivateBalance />
+          ) : (
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={{
+                backgroundColor: 'transparent',
+                fontWeight: 'bold',
+                fontSize: 36,
+                color: '#fff',
+              }}
+            >
+              {loc.formatBalance(this.state.wallet.getBalance(), this.state.wallet.getPreferredBalanceUnit(), true).toString()}
+            </Text>
+          )}
+        </TouchableOpacity>
+        {this.state.wallet.type === LightningCustodianWallet.type && (
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('ManageFunds', { fromWallet: this.state.wallet })}>
+            <View
+              style={{
+                marginTop: 14,
+                marginBottom: 10,
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                borderRadius: 9,
+                minWidth: 119,
+                minHeight: 39,
+                width: 119,
+                height: 39,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 14,
+                  color: '#FFFFFF',
+                }}
+              >
+                {loc.lnd.title}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      </LinearGradient>
+    );
+  }
+}
+
 export class BlueButtonLink extends Component {
   render() {
     return (
@@ -203,6 +380,23 @@ export const BlueNavigationStyle = (navigation, withNavigationCloseButton = fals
   ) : null,
   headerBackTitle: null,
 });
+
+export const BluePrivateBalance = () => {
+  return Platform.select({
+    ios: (
+      <View style={{ flexDirection: 'row' }}>
+        <BlurView style={styles.balanceBlur} blurType="light" blurAmount={25} />
+        <Icon name="eye-slash" type="font-awesome" color="#FFFFFF" />
+      </View>
+    ),
+    android: (
+      <View style={{ flexDirection: 'row' }}>
+        <View style={{ backgroundColor: '#FFFFFF', opacity: 0.5, height: 30, width: 100, marginRight: 8 }} />
+        <Icon name="eye-slash" type="font-awesome" color="#FFFFFF" />
+      </View>
+    ),
+  });
+};
 
 export const BlueCopyToClipboardButton = ({ stringToCopy }) => {
   return (
@@ -1544,18 +1738,22 @@ export class WalletsCarousel extends Component {
             >
               {item.getLabel()}
             </Text>
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              style={{
-                backgroundColor: 'transparent',
-                fontWeight: 'bold',
-                fontSize: 36,
-                color: BlueApp.settings.inverseForegroundColor,
-              }}
-            >
-              {loc.formatBalance(Number(item.getBalance()), item.getPreferredBalanceUnit(), true)}
-            </Text>
+            {item.hideBalance ? (
+              <BluePrivateBalance />
+            ) : (
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                style={{
+                  backgroundColor: 'transparent',
+                  fontWeight: 'bold',
+                  fontSize: 36,
+                  color: BlueApp.settings.inverseForegroundColor,
+                }}
+              >
+                {loc.formatBalance(Number(item.getBalance()), item.getPreferredBalanceUnit(), true)}
+              </Text>
+            )}
             <Text style={{ backgroundColor: 'transparent' }} />
             <Text
               numberOfLines={1}
@@ -1774,3 +1972,11 @@ export class BlueBitcoinAmount extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  balanceBlur: {
+    height: 30,
+    width: 100,
+    marginRight: 16,
+  },
+});
