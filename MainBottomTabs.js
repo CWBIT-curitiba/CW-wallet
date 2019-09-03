@@ -258,6 +258,7 @@ const MainBottomTabs = createStackNavigator(
       screen: CreateTransactionStackNavigator,
       navigationOptions: {
         header: null,
+        gesturesEnabled: false,
       },
     },
 
